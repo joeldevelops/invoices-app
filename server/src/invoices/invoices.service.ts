@@ -46,7 +46,11 @@ export const addInvoice = async (userId: string, invoiceInput: InvoiceInput): Pr
 
   invoice.history = [initialHistory];
 
-  return invoices.create(invoice);
+  const newInvoice = await invoices.create(invoice);
+
+  // email logic would go here. Something like nodemailer could work but should be separate service.
+
+  return newInvoice;
 };
 
 export const updateInvoice = async (id: string, updates: any): Promise<Invoice> => {

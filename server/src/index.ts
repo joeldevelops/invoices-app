@@ -5,6 +5,7 @@ import * as express from 'express';
 import * as cors from 'cors';
 import { json } from 'body-parser';
 import * as path from 'path';
+import { CronJob } from 'cron';
 
 import * as winston from 'winston';
 const logger = winston.loggers.add('app-logger', {
@@ -22,6 +23,8 @@ import { initMongoConnection } from './mongo';
 import authController from './auth/auth.controller';
 import invoicesController from './invoices/invoices.controller';
 import usersController from './users/users.controller';
+
+import updateDailyInvoices from './scheduler/scheduler.service'
 
 (async () => {
   let app = express();
@@ -55,5 +58,10 @@ import usersController from './users/users.controller';
 
   app.listen(config.port, () => {
     console.log("App running on port: ", config.port);
+
+    // Job runs every night at midnight for that day
+    let checkInvoiceJob = new CronJob('0 0 0 * * *', async () => {
+      await updateDailyInvoices();
+    }, null, true, 'America/New_York')
   });
 })();
