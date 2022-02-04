@@ -9,7 +9,8 @@ To start, create a `.env` file with the fields from the following sample at the 
 .env
 ```
 PORT=8080
-RUNTIME_ENV=dev
+RUNTIME_ENV=dev|test|prod
+LOG_LEVEL=debug
 
 MONGO_HOST=localhost
 MONGO_PORT=27017

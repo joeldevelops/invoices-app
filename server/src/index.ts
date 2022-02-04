@@ -6,6 +6,15 @@ import * as cors from 'cors';
 import { json } from 'body-parser';
 import * as path from 'path';
 
+import * as winston from 'winston';
+const logger = winston.loggers.add('app-logger', {
+  level: config.logLevel,
+  format: winston.format.simple(),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
+
 import config from './config';
 
 import { initMongoConnection } from './mongo';
@@ -29,6 +38,7 @@ import usersController from './users/users.controller';
       await initMongoConnection(); // Connect after startup
     }
     catch (e) {
+      logger.error(e);
       return res.status(500).json(e.message);
     }
 

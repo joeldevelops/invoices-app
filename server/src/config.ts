@@ -1,6 +1,7 @@
 export default Object.freeze({
   runtimeEnv: process.env.RUNTIME_ENV,
   port: process.env.PORT,
+  logLevel: process.env.LOG_LEVEL,
   mongo: {
     host: process.env.MONGO_HOST,
     port: process.env.MONGO_PORT,

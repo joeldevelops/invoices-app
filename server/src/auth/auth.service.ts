@@ -9,12 +9,12 @@ import config from '../config';
 export const comparePassword = async (login: LoginInfo): Promise<string> => {
   const user = await userService.getUserByEmail(login.email);
   if (!user) {
-    throw new Error('Incorrect email or password');
+    throw new Error('Incorrect email');
   }
 
   const validPassword = await bcrypt.compare(login.password, user.password);
   if (!validPassword) {
-    throw new Error('Incorrect email or password');
+    throw new Error('Incorrect password');
   }
   
   const issuedAt = Date.now();

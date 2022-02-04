@@ -7,7 +7,6 @@ import {
   InvoiceClosedError,
   InvoiceInput,
   InvoiceStatus,
-  InvoiceUpdate,
   PaymentItem
 } from '.';
 import invoices from './invoices.model';
