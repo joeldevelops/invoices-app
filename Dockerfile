@@ -4,10 +4,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 RUN npm ci
-
-RUN cd ./server && npm ci
-
-RUN cd ..
+RUN npm run build
 
 EXPOSE $PORT
 CMD [ "npm", "start" ]

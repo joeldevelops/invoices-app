@@ -17,12 +17,13 @@ This service shows and allows users to manage their invoices.
   - [App Startup](#app-startup)
   - [Error Handling](#error-handling)
   - [What's Missing?](#whats-missing)
-    - [Testing](#testing-2)
+    - [Integration Testing](#integration-testing)
     - [Front End Routing](#front-end-routing)
     - [Pages](#pages)
     - [Emailing](#emailing)
     - [Input Validation](#input-validation)
     - [Swagger/OpenAPI](#swaggeropenapi)
+    - [Image/Package Scanning](#imagepackage-scanning)
 
 ## Docker Setup
 
@@ -50,12 +51,19 @@ docker compose up --build # Optionally add -d if you wish to daemonize the app
 ```
 
 ## Running the App Locally
+First, install the dependencies:
+```
+npm install
+```
+The `postinstall` script will handle installing the dependencies for the server application.
 
 If you decide to run the application locally, you need to set up a mongodb connection. You can run the following commands:
 ```
 docker compose up mongo -d
-npm start
+npm run start:dev
 ```
+
+Note: `npm run start dev` builds and runs the application, `npm start` expects both react and server builds to already exist. At any point you can run `npm run build` to run a new build for both the react and server applications.
 
 Optionally, you can specify your own Mongodb connection via the `MONGO` variables in the `.env` file. You can specify the host/port ect. or specify a connection string which takes precedence.
 
@@ -123,7 +131,7 @@ I used custom errors where needed but opted out of using a custom error handling
 ## What's Missing?
 The details below are an admission of the things I would have like to have included, but did not find the time for.
 
-### Testing
+### Integration Testing
 Testing is sparse on this project from the perspective of a production-ready application. I elected to omit integration/e2e tests in the interest of time. I also did not fully complete testing for the auth package. Luckily the code is straight forward and tests can easily be added in the future should they be needed.
 
 Also there are no tests for the React portion of this application.
@@ -148,3 +156,6 @@ Joi is a common package to handle the input/request validation, but there are no
 
 ### Swagger/OpenAPI
 I'll be honest, writing these yaml files is a nightmare, but they are nice to have in a live application.
+
+### Image/Package Scanning
+This probably makes more sense if it were included in a full-on pipeline or CI/CD process but it would be ideal for catching security or license vulnerabilities.

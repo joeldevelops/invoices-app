@@ -1,4 +1,7 @@
 coverage
-dist
+build
 node_modules
-test
+
+server/dist
+server/node_modules
+server/test

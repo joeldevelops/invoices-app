@@ -4,7 +4,8 @@
   "description": "A service for managing user invoices.",
   "main": "dist/src/index.js",
   "scripts": {
-    "start": "npm run build && node .",
+    "start": "node .",
+    "start:dev": "npm run build && node .",
     "build": "tsc -p tsconfig.json",
     "test": "jest",
     "test:coverage": "jest --coverage",
