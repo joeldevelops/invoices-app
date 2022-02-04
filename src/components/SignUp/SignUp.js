@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import PropTypes from 'prop-types';
 
 async function registerUser(user) {
-  const res = await axios.post('http://localhost:8080/api/v1.0/users/register', user, {
+  const res = await axios.post(`/api/v1.0/users/register`, user, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -18,7 +18,7 @@ async function registerUser(user) {
     password: user.password
   }
 
-  const authRes = await axios.post('http://localhost:8080/api/v1.0/auth', creds, {
+  const authRes = await axios.post(`/api/v1.0/auth`, creds, {
     headers: {
       'Content-Type': 'application/json'
     }

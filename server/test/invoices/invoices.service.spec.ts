@@ -48,6 +48,15 @@ describe('invoices.service.ts', () => {
     });
   });
 
+  describe('getLateInvoiceByUser', () => {
+
+    test('should return multiple late invoice documents from the model based on user', async () => {
+      mockingoose(invoicesModel).toReturn([testInvoice], 'find');
+      const res = await invoiceService.getLateInvoicesByUser(testUserId);
+      expect(res[0].name).toBe(testInvoice.name);
+    });
+  });
+
   describe('getInvoiceById', () => {
 
     test('should return an invoice document from the model', async () => {
