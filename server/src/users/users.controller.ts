@@ -1,9 +1,12 @@
 import { Router } from 'express';
+import * as winston from 'winston';
 
 import { Auth } from '../auth';
 
 import { DuplicateUserError, User, UserNotFoundError } from '.';
 import * as usersService from './users.service';
+
+const logger = winston.loggers.get('app-logger');
 
 const auth = new Auth();
 const router = Router();
@@ -17,6 +20,7 @@ router.post('/v1.0/users/register', async (req, res) => {
     createdUser = await usersService.createUser(user);
   }
   catch (e) {
+    logger.error(e);
     if (e instanceof DuplicateUserError) {
       return res.status(400).send('A user with that email already exists.')
     }
@@ -38,6 +42,7 @@ router.get('/v1.0/users/:id', auth.isUserOrAdmin(), async (req, res) => {
     user = await usersService.getUserById(userId);
   }
   catch (e) {
+    logger.error(e);
     return res.status(500).send('An error occurred when getting users.');
   }
 
@@ -53,6 +58,7 @@ router.put('/v1.0/users/:id', auth.isUserOrAdmin(), async (req, res) => {
     user = await usersService.updateUser(userId, userUpdates);
   }
   catch (e) {
+    logger.error(e);
     if (e instanceof UserNotFoundError) {
       res.status(400).send(`Unable to get user with ID: ${userId}`);
     }

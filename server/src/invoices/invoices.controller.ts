@@ -1,9 +1,12 @@
 import { Router } from 'express';
+import * as winston from 'winston';
 
 import { Auth, Roles } from '../auth';
 
 import { Invoice, InvoiceInput, InvoiceUpdate } from '.';
 import * as invoicesService from './invoices.service';
+
+const logger = winston.loggers.get('app-logger');
 
 const auth = new Auth();
 const router = Router();
@@ -20,7 +23,8 @@ router.get('/v1.0/invoices',
       invoices = await invoicesService.getInvoicesByUser(userId);
     }
     catch (e) {
-      return res.status(500).json('An error occurred when getting invoices.')
+      logger.error(e);
+      return res.status(500).json('An error occurred when getting invoices.');
     }
       
     return res.json(invoices);
@@ -35,6 +39,7 @@ router.get('/v1.0/invoices/:id',
       invoice = await invoicesService.getInvoiceById(req.params.id);
     }
     catch (e) {
+      logger.error(e);
       return res.status(500).json('An error occurred when getting invoice by ID.')
     }
 
@@ -45,7 +50,6 @@ router.get('/v1.0/invoices/:id',
 router.post('/v1.0/invoices/:id/pay', 
   auth.hasPermission([Roles.ADMIN, Roles.USER]),
   async (req: any, res) => {
-    const userId: string = req.user.sub;
     const { invoiceId, paymentAmount } = req.body;
 
     let paidInvoice;
@@ -53,6 +57,7 @@ router.post('/v1.0/invoices/:id/pay',
       paidInvoice = await invoicesService.payInvoice(invoiceId, paymentAmount);
     }
     catch (e) {
+      logger.error(e);
       return res.status(500).json('An error occurred when paying invoice.')
     }
 
@@ -71,6 +76,7 @@ router.post('/v1.0/invoices',
       newInvoice = await invoicesService.addInvoice(userId, invoice);
     }
     catch (e) {
+      logger.error(e);
       return res.status(500).json('An error occurred when creating the invoice.')
     }
 
@@ -89,6 +95,7 @@ router.put('/v1.0/invoices',
       updatedInvoice = await invoicesService.updateInvoice(userId, updates);
     }
     catch (e) {
+      logger.error(e);
       return res.status(500).json('An error occurred when updating the invoice.')
     }
 

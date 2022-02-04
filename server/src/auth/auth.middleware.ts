@@ -1,3 +1,4 @@
+import * as winston from 'winston';
 import { Jwt } from "./jwt";
 
 export enum Header {
@@ -8,6 +9,8 @@ export enum Roles {
   ADMIN = 'ADMIN',
   USER = 'USER'
 }
+
+const logger = winston.loggers.get('app-logger');
 
 export class Auth {
 
@@ -30,7 +33,7 @@ export class Auth {
         valid = true;
       }
       catch (e) {
-        console.error(e.message);
+        logger.debug(e.message);
       }
 
       return valid ? next() : res.status(403).send('No token available.');

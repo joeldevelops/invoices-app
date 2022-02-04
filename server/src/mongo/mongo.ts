@@ -1,6 +1,9 @@
 import * as mongoose from 'mongoose';
+import * as winston from 'winston';
 
 import config from '../config';
+
+const logger = winston.loggers.get('app-logger');
 
 let mongoUri;
 
@@ -23,7 +26,7 @@ export const initMongoConnection = async () => {
     }
   }
   catch (e) {
-    console.error(e);
     connection = null;
+    throw new Error(e.message); // Bubble up
   }
 }
