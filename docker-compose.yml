@@ -1,0 +1,21 @@
+version: "3"
+
+services: 
+  invoices-app:
+    env_file: ./.env
+    environment: 
+      - MONGO_HOST=mongo # Overwrite this env when inside the container
+    build: ./
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on: 
+      - mongo
+  mongo:
+    image: mongo
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes: 
+  mongodb_data:
