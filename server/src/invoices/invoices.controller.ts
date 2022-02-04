@@ -31,6 +31,24 @@ router.get('/v1.0/invoices',
   }
 );
 
+router.get('/v1.0/invoices/past-due', 
+  auth.hasPermission([Roles.ADMIN, Roles.USER]),
+  async (req: any, res) => {
+    const userId: string = req.user.sub;
+
+    let invoices;
+    try {
+      invoices = await invoicesService.getLateInvoicesByUser(userId);
+    }
+    catch (e) {
+      logger.error(e);
+      return res.status(500).json('An error occurred when getting invoices.');
+    }
+      
+    return res.json(invoices);
+  }
+);
+
 router.get('/v1.0/invoices/:id', 
   auth.hasPermission([Roles.ADMIN, Roles.USER]),
   async (req, res) => {

@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const getInvoices = async (token) => {
-  const url = `/api/v1.0/invoices`
+const getLateInvoices = async (token) => {
+  const url = `/api/v1.0/invoices/past-due`
   return axios.get(url, {
     headers: {
       'Content-Type': 'application/json',
@@ -11,14 +11,13 @@ const getInvoices = async (token) => {
   });
 };
 
-export default function InvoiceList({ getToken }) {
+export default function LateInvoiceList({ getToken }) {
   const [invoices, setInvoices] = useState();
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const load = async () => {
-      const userInvoices = await getInvoices(getToken());
-      console.log(userInvoices);
+      const userInvoices = await getLateInvoices(getToken());
       const data = userInvoices.data.map((invoice, index) => 
           <a href={`/${invoice._id}`} className="list-group-item list-group-item-action" key={index}>{invoice.name}              Due At: {invoice.dueAt}</a>)
       setInvoices(data);

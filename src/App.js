@@ -4,8 +4,10 @@ import './App.css';
 import { Route, Routes, Link } from "react-router-dom";
 
 import InvoiceList from './components/InvoiceList/InvoiceList';
+import LateInvoiceList from './components/LateInvoiceList/LateInvoiceList';
 import Login from "./components/Login/Login";
 import SignUp from "./components/SignUp/SignUp";
+import NewInvoice from './components/NewInvoice/NewInvoice';
 
 function setToken(token) {
   localStorage.setItem('token', token);
@@ -28,6 +30,12 @@ function App() {
           <div className="navbar-items">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
+                <Link className="nav-link" to={"/past-due"}>Past Due</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to={"/new-invoice"}>New Invoice</Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link" to={"/sign-in"}>Login</Link>
               </li>
               <li className="nav-item">
@@ -40,6 +48,8 @@ function App() {
 
       <Routes>
         <Route exact path='/' element={<InvoiceList getToken={getToken} />} />
+        <Route path="/past-due" element={<LateInvoiceList getToken={getToken} />} />
+        <Route path="/new-invoice" element={<NewInvoice getToken={getToken} />} />
         <Route path="/sign-up" element={<SignUp setToken={setToken} />} />
         <Route path="/sign-in" element={<Login setToken={setToken} />} />
       </Routes>

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import axios from "axios";
 
 async function loginUser(creds) {
-  const res = await axios.post('http://localhost:8080/api/v1.0/auth', creds, {
+  const res = await axios.post(`/api/v1.0/auth`, creds, {
     headers: {
       'Content-Type': 'application/json'
     }

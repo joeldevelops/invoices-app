@@ -6,13 +6,14 @@ import * as winston from 'winston';
 
 const logger = winston.loggers.get('app-logger');
 
-const updateDueInvoices = async () => {
+const updateDueInvoices = async (): Promise<void> => {
 
   const dueHistoryItem: HistoryItem = {
     status: InvoiceStatus.DUE,
     at: new Date()
   }
 
+  // Only update for items due today
   await invoicesModel.updateMany({
     dueAt: {
       $gte: new Date(new Date().setHours(0, 0, 0, 0)),
@@ -20,18 +21,16 @@ const updateDueInvoices = async () => {
     }
   },
   {
-    $set: {
-      $push: {
-        history: {
-          $each: dueHistoryItem,
-          $position: 0
-        }
+    $push: {
+      history: {
+        $each: [dueHistoryItem],
+        $position: 0
       }
     }
   });
 }
 
-const updateLateInvoices = async () => {
+const updateLateInvoices = async (): Promise<void> => {
 
   const lateHistoryItem: HistoryItem = {
     status: InvoiceStatus.PAST_DUE,
@@ -41,25 +40,26 @@ const updateLateInvoices = async () => {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
 
+  // Only update for items due yesterday
   await invoicesModel.updateMany({
     dueAt: {
-      $gte: new Date(new Date(yesterday).setHours(0, 0, 0, 0)),
+      $gt: new Date(new Date(yesterday).setHours(0, 0, 0, 0)),
       $lt: new Date(new Date(yesterday).setHours(23, 59, 59, 99))
     }
   },
   {
-    $set: {
-      $push: {
-        history: {
-          $each: lateHistoryItem,
-          $position: 0
-        }
-      }
+    $push: {
+      history: {
+        $each: [lateHistoryItem],
+        $position: 0
+      },
     }
   });
 }
 
-export default async () => {
+// This function should kick off a process to notify a user via
+// an email that their invoice is due or late.
+export default async (): Promise<void> => {
   try {
     await updateDueInvoices();
   }

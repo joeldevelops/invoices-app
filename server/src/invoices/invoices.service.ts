@@ -31,6 +31,18 @@ export const getInvoicesByUser = async (userId: string): Promise<Invoice[]> => {
   return invoices.find({ userId });
 };
 
+export const getLateInvoicesByUser = async (userId: string): Promise<Invoice[]> => {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  return invoices.find({
+    userId,
+    dueAt: {
+      $lte: new Date(new Date(yesterday).setHours(23, 59, 59, 99))
+    }
+  });
+};
+
 export const getInvoiceById = async (invoiceId: string): Promise<Invoice> => {
   return invoices.findOne({ _id: invoiceId });
 };
@@ -38,6 +50,7 @@ export const getInvoiceById = async (invoiceId: string): Promise<Invoice> => {
 export const addInvoice = async (userId: string, invoiceInput: InvoiceInput): Promise<Invoice> => {
   const invoice: Invoice = invoiceInput as any;
   invoice.userId = userId;
+  invoice.dueAt = new Date(invoice.dueAt);
 
   const initialHistory: HistoryItem = {
     status: InvoiceStatus.OPEN,
